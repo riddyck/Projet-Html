@@ -117,6 +117,14 @@
 		
 	}
 	
+	Robot.prototype.dessin = function (ctx,dX,dY)
+   	{	
+    	ctx.arc(this.posX*dX+dX/2, this.posY*dY+dY/2, 0.45*dX, 0, 2 * Math.PI);
+		ctx.fillStyle = this.couleur;
+        ctx.strokeStyle = this.couleur;
+        ctx.fill();
+        ctx.stroke();	
+  	}	
 	Robot.prototype.perception =function() {
 		var admis= new Array;
 		if (gr.mvtAdmis(this,0,1))
@@ -128,7 +136,7 @@
 		if (gr.mvtAdmis(this,-1,0))
 			admis.push([-1,0]);
 	
-	setTimeout(this.reflexion(admis));
+		setTimeout(this.reflexion(admis));
 	}
     
      Robot.prototype.reflexion = function (tabMvt)
