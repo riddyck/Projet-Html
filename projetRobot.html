@@ -21,164 +21,176 @@
   <div id="stop">Stop</div>
 </body>
 <script type="text/javascript">
-	function Grille(nbX, nbY, canva) {
-		this.nbX=nbX;
-		this.nbY=nbY;
-		this.canvas=canva;
-		this.tab= new Array(nbX);
-		
-		for (var i=0;i<nbX;i++) {
-			this.tab[i]= new Array(nbY);
-			for (var j=0;j<nbY;j++) 
-				this.tab[i][j]=false;
-		}
-		
-        this.dX = 350/nbX;
-        this.dY = 350/nbY;
-		this.obj= new Array; 
-		this.nbC=nbX*nbY;
-		this.nbCur=0;
-        this.ctx='2d';
-		
-	}
-	
-	Grille.prototype.dessinGrille = function() 
-	{
-		var c = document.getElementById(this.canvas);
-		var ctx = c.getContext(this.ctx);
-        for (var k=1;k<this.nbX;k++) {
-        	ctx.moveTo(0, k*this.dX);
-        	ctx.lineTo(350, k*this.dX);
-        }
-        for (var k=1;k<this.nbY;k++) {
-        	ctx.moveTo(k*this.dY,0);
-        	ctx.lineTo(k*this.dY,350);
-        }
-		ctx.strokeStyle = "grey";
-     	ctx.stroke();
-	}
-	Grille.prototype.ajoutObjet = function(objet)
-	{
-		this.nbCur += 1;
-        var longueur = this.obj.push(objet);
-        tab[objet.posX][objet.posY]=true;
-	}
-	
-    Grille.prototype.dessin = function()
-    {
-    	this.dessinGrille();
-        
-        var c = document.getElementById(this.canvas);
-        var ctx = c.getContext(this.ctx);
-        
-        for (var k =0;k<this.nbCur;k++) {
-        	ctx.moveTo(this.obj[k].posX,this.obj[k].posY);
-        	dessin(this.ctx,this.dX,this.dY);
-        }
-    }
-	
-    Grille.prototype.mvtAdmis = function(objet,dx,dy)
-    {
-    	if ((objet.posX+dx >= 0) && (objet.posX+dx < this.nbX) && (objet.posY+dy >= 0) && (objet.posY+dy < this.nbY)){
-        	return (true);
-        }
-        return(false);
-    }
-	
-    Grille.prototype.dessin = function(objet,dx,dy)
-    {
-        dessin(this.ctx,this.dx,this.dy);
-    }
-    
-     Grille.prototype.majDessinObjet = function(objet,dx,dy)
-    {
-        ctx.arc((objet.posX-dx)*dX+dX/2, (objet.posY-dy)*dY+dY/2, 0.45*dX, 0, 2 * Math.PI);
-		ctx.fillStyle = 'white';
-        ctx.strokeStyle = 'white';
-        ctx.fill();
-        ctx.stroke();	
-        objet.dessin(this.ctx,this.dx,this.dy);
-    }
-    
-    Grille.prototype.stopObjets = function()
-    {
-    	for (var k =0;k<this.nbCur;k++) {
-        		this.obj[k].eveille=false;
-            }
-    }
-	
-     function Robot(x,y,vitesse,couleur) {
-		this.PosX=x;
-		this.PosY=y;
-		this.temps= vitesse;
-		this.couleur= couleur;
-		this.timeID= null;
-		this.eveille= false ;
-		
-	}
-	
-	Robot.prototype.dessin = function (ctx,dX,dY)
-   	{	
-    	ctx.arc(this.posX*dX+dX/2, this.posY*dY+dY/2, 0.45*dX, 0, 2 * Math.PI);
-		ctx.fillStyle = this.couleur;
-        ctx.strokeStyle = this.couleur;
-        ctx.fill();
-        ctx.stroke();	
-  	}	
-	Robot.prototype.perception =function() {
-		var admis= new Array;
-		if (gr.mvtAdmis(this,0,1))
-			admis.push([0,1]);
-		if (gr.mvtAdmis(this,1,0))
-			admis.push([1,0]);
-		if (gr.mvtAdmis(this,0,-1))
-			admis.push([0,-1]);
-		if (gr.mvtAdmis(this,-1,0))
-			admis.push([-1,0]);
-	
-		setTimeout(this.reflexion(admis));
-	}
-    
-     Robot.prototype.reflexion = function (tabMvt)
-    {
-    	var min = 0;
-       	var max = tabMvt.length;
-       	var act = tabMvt[getRandomInt(min, max)];
-       	setTimeout(function(){ this.action; }, this.temps);
-        
-    }
-	
-	Robot.prototype.action =function(act) {
-		var a,b;
-		[a,b]=act;
-		gr.majDessinObjet(this,a,b)
-	}
-		
-	Robot.prototype.reveille =function() {
-		var act= new Array;
-		act=this.perception();
-		this.action(act);
-		this.eveille=true;
-	}
+
     
   // -------------------------------------------------------
   // Méthodes de l'objet Grille  
  
+  function Grille(nbX, nbY, canva) {
+    this.nbX=nbX;
+    this.nbY=nbY;
+    this.canva = document.getElementById("mon_canvas");
+    this.tab= new Array(nbX);
+    
+    for (var i=0;i<nbX;i++) {
+      this.tab[i]= new Array(nbY);
+      for (var j=0;j<nbY;j++) 
+        this.tab[i][j]=false;
+    }
+    
+        this.dX = 350/nbX;
+        this.dY = 350/nbY;
+    this.obj= new Array; 
+    this.nbC=nbX*nbY;
+    this.nbCur=0;
+        this.ctx = this.canva.getContext("2d");
+    
+  }
+  
+  Grille.prototype.dessinGrille = function() 
+  {
+    this.ctx.beginPath();
+    for (var k=1;k<this.nbX;k++) {
+      this.ctx.moveTo(0, k*this.dX);
+      this.ctx.lineTo(350, k*this.dX);
+    }
+    for (var k=1;k<this.nbY;k++) {
+      this.ctx.moveTo(k*this.dY,0);
+      this.ctx.lineTo(k*this.dY,350);
+    }
+    this.ctx.strokeStyle = "grey";
+    this.ctx.stroke();
+    this.ctx.closePath;
+  }
+  Grille.prototype.ajoutObjet = function(objet)
+  {
+    this.nbCur += 1;
+        var longueur = this.obj.push(objet);
+        this.tab[objet.posX][objet.posY]=true;
+  }
+  
+    Grille.prototype.dessin = function()
+    {
+      this.dessinGrille();
+        
+
+        for (var k =0;k<this.nbCur;k++) {
+          this.obj[k].dessin(this.ctx,this.dX,this.dY);
+        }
+    }
+  https://www.google.com/search?client=ubuntu&channel=fs&q=github&ie=utf-8&oe=utf-8
+    Grille.prototype.mvtAdmis = function(objet,dx,dy)
+    {
+      if ((objet.posX+dx >= 0) && (objet.posX+dx < this.nbX) && (objet.posY+dy >= 0) && (objet.posY+dy < this.nbY)){
+          return (true);
+        }
+        return(false);
+    }
+    
+     Grille.prototype.majDessinObjet = function(objet,dx,dy)
+    {
+        dX=this.dX
+        dY=this.dY
+        this.ctx.clearRect((objet.posX-dx)*dX, (objet.posY-dy)*dY, dX, dY); 
+        this.ctx.stroke(); 
+        if (this.tab[objet.posX][objet.posY]==false)
+        {
+          this.nbCur+=1;
+          console.log(this.nbCur);
+          this.tab[objet.posX][objet.posY]=true;
+        }
+        objet.dessin(this.ctx,dX,dY);
+    }
+    
+    Grille.prototype.stopObjets = function()
+    {
+      for (var k =0;k<gr.obj.length;k++) {
+            gr.obj[k].eveille=false;
+            }
+    }
+
   // -------------------------------------------------------
   // Méthodes de l'objet
+
+     function Robot(x,y,vitesse,couleur) {
+    this.posX=x;
+    this.posY=y;
+    this.temps= vitesse;
+    this.couleur= couleur;
+    this.timeID= null;
+    this.eveille= false ;
+    
+  }
+  
+  Robot.prototype.dessin = function (ctx,dX,dY)
+    { 
+      ctx.beginPath()
+      ctx.moveTo(this.posX*dX+dX/2, this.posY*dY+dY/2);
+      ctx.arc(this.posX*dX+dX/2, this.posY*dY+dY/2, 0.45*dX, 0, 2 * Math.PI);
+      ctx.fillStyle = this.couleur;
+      ctx.strokeStyle = this.couleur;
+      ctx.fill();
+      ctx.stroke();
+      ctx.closePath()
+      
+    } 
+  Robot.prototype.perception =function() {
+    if (this.eveille==true && gr.nbCur<gr.nbC){
+      var admis= new Array;
+      var objet = this;
+      if (gr.mvtAdmis(this,0,1))
+        admis.push([0,1]);
+      if (gr.mvtAdmis(this,1,0))
+        admis.push([1,0]);
+      if (gr.mvtAdmis(this,0,-1))
+        admis.push([0,-1]);
+      if (gr.mvtAdmis(this,-1,0))
+        admis.push([-1,0]);
+      objet.reflexion(admis);
+    }
+  }
+    
+     Robot.prototype.reflexion = function (tabMvt)
+    { 
+        var rob=this;
+        var min = 0;
+        var max = tabMvt.length-1;
+        var truc=getRandomInt(min, max);
+        var act = tabMvt[truc];
+        rob.action(act);
+        
+    }
+  
+  Robot.prototype.action =function(act) {
+    var rob=this;
+    this.posX+=act[0];
+    this.posY+=act[1];
+    gr.majDessinObjet(this,act[0],act[1]);
+    setTimeout(function() {rob.perception()}, rob.temps);
+  }
+    
+  Robot.prototype.reveille =function() {
+    this.eveille=true;
+    this.perception();
+  }
+
+
   // -------------------------------------------------------
   // scène globale
   var gr = new Grille(12,12,'mon_canvas');
-  //var rbt1 = new Robot(4,4,0.1,'black');
-  //var rbt2 = new Robot(11,11,0.03,'red');
-  //var rbt3 = new Robot(5,10,0.05,'blue');
-  gr.dessinGrille();  
+  var rbt1 = new Robot(4,4,0.1,'black');
+  var rbt2 = new Robot(11,11,0.03,'red');
+  var rbt3 = new Robot(5,10,0.05,'blue');
   gr.ajoutObjet(rbt1);
   gr.ajoutObjet(rbt2);
   gr.ajoutObjet(rbt3);
   gr.dessin();
-  //rbt1.reveille();
-  //rbt2.reveille();
-  //rbt3.reveille();
+  rbt1.reveille();
+  rbt2.reveille();
+  rbt3.reveille();
+
+  var p = document.getElementById("stop");
+  p.onclick = gr.stopObjets;
+
 </script>
 </html>
