@@ -98,6 +98,30 @@
         		this.obj[k].eveille=false;
             }
     }
+	
+     function Robot(x,y,vitesse,couleur) {
+		this.PosX=x;
+		this.PosY=y;
+		this.temps= vitesse;
+		this.couleur= couleur;
+		this.timeID= null;
+		this.eveille= false ;
+		
+	}
+	
+	Robot.prototype.perception =function() {
+		var admis= new Array;
+		if (gr.mvtAdmis(this,0,1))
+			admis.push([0,1]);
+		if (gr.mvtAdmis(this,1,0))
+			admis.push([1,0]);
+		if (gr.mvtAdmis(this,0,-1))
+			admis.push([0,-1]);
+		if (gr.mvtAdmis(this,-1,0))
+			admis.push([-1,0]);
+	
+	setTimeout(this.reflexion(admis));
+	}
     
   // -------------------------------------------------------
   // Méthodes de l'objet Grille  
