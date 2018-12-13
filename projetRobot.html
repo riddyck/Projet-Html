@@ -151,6 +151,21 @@
         	setTimeout(function(){ this.action; }, this.temps);
         
     	}
+	
+	Robot.prototype.action =function(act) {
+		var a,b;
+		[a,b]=act;
+		gr.majDessinObjet(this,a,b)
+	}
+	
+	Robot.prototype.reveille =function() {
+		var act= new Array;
+		act=this.perception();
+		this.action(act);
+		this.eveille=true;
+		
+	}
+	
     
 
   // -------------------------------------------------------
