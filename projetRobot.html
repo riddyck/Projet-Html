@@ -21,10 +21,6 @@
   <div id="stop">Stop</div>
 </body>
 <script type="text/javascript">
-
- // -------------------------------------------------------
-  // Méthodes de l'objet Grille  
- 	
 	function Grille(nbX, nbY, canva) {
 		this.nbX=nbX;
 		this.nbY=nbY;
@@ -32,19 +28,19 @@
 		this.tab= new Array(nbX);
 		
 		for (var i=0;i<nbX;i++) {
-				this.tab[i]= new Array(nbY);
-				for (var j=0;j<nbY;j++) {
-					this.tab[i][j]=false;
-			}
+			this.tab[i]= new Array(nbY);
+			for (var j=0;j<nbY;j++) 
+				this.tab[i][j]=false;
+		}
 		
-       	this.dX = 350/nbX;
-       	this.dY = 350/nbY;
+        this.dX = 350/nbX;
+        this.dY = 350/nbY;
 		this.obj= new Array; 
 		this.nbC=nbX*nbY;
 		this.nbCur=0;
-       	this.ctx='2d';
+        this.ctx='2d';
 		
-		}
+	}
 	
 	Grille.prototype.dessinGrille = function() 
 	{
@@ -61,24 +57,24 @@
 		ctx.strokeStyle = "grey";
      	ctx.stroke();
 	}
-
 	Grille.prototype.ajoutObjet = function(objet)
 	{
 		this.nbCur += 1;
-        this.obj.push(objet);
+        var longueur = this.obj.push(objet);
         tab[objet.posX][objet.posY]=true;
 	}
 	
     Grille.prototype.dessin = function()
     {
     	this.dessinGrille();
-       	var c = document.getElementById(this.canvas);
-       	var ctx = c.getContext(this.ctx);
         
-       	for (var k =0;k<this.nbCur;k++) {
-       		ctx.moveTo(this.obj[k].posX,this.obj[k].posY);
-       		dessin(this.ctx,this.dX,this.dY);
-    	}
+        var c = document.getElementById(this.canvas);
+        var ctx = c.getContext(this.ctx);
+        
+        for (var k =0;k<this.nbCur;k++) {
+        	ctx.moveTo(this.obj[k].posX,this.obj[k].posY);
+        	dessin(this.ctx,this.dX,this.dY);
+        }
     }
 	
     Grille.prototype.mvtAdmis = function(objet,dx,dy)
@@ -89,7 +85,12 @@
         return(false);
     }
 	
-    Grille.prototype.majDessinObjet = function(objet,dx,dy)
+    Grille.prototype.dessin = function(objet,dx,dy)
+    {
+        dessin(this.ctx,this.dx,this.dy);
+    }
+    
+     Grille.prototype.majDessinObjet = function(objet,dx,dy)
     {
         ctx.arc((objet.posX-dx)*dX+dX/2, (objet.posY-dy)*dY+dY/2, 0.45*dX, 0, 2 * Math.PI);
 		ctx.fillStyle = 'white';
@@ -102,15 +103,11 @@
     Grille.prototype.stopObjets = function()
     {
     	for (var k =0;k<this.nbCur;k++) {
-       		this.obj[k].eveille=false;
-        }
+        		this.obj[k].eveille=false;
+            }
     }
-
 	
-  // -------------------------------------------------------
-  // Méthodes de l'objet
-	
-    function Robot(x,y,vitesse,couleur) {
+     function Robot(x,y,vitesse,couleur) {
 		this.PosX=x;
 		this.PosY=y;
 		this.temps= vitesse;
@@ -120,33 +117,21 @@
 		
 	}
 	
-	Robot.prototype.dessin = function (ctx,dX,dY)
-   	{	
-    	ctx.arc(this.posX*dX+dX/2, this.posY*dY+dY/2, 0.45*dX, 0, 2 * Math.PI);
-		ctx.fillStyle = this.couleur;
-        ctx.strokeStyle = this.couleur;
-        ctx.fill();
-        ctx.stroke();	
-    }
-	
 	Robot.prototype.perception =function() {
 		var admis= new Array;
-		if (gr.mvtAdmis(this,0,1)){
+		if (gr.mvtAdmis(this,0,1))
 			admis.push([0,1]);
-		}
-		if (gr.mvtAdmis(this,1,0)){
+		if (gr.mvtAdmis(this,1,0))
 			admis.push([1,0]);
-		}
-		if (gr.mvtAdmis(this,0,-1)){
+		if (gr.mvtAdmis(this,0,-1))
 			admis.push([0,-1]);
-		}
-		if (gr.mvtAdmis(this,-1,0)){
+		if (gr.mvtAdmis(this,-1,0))
 			admis.push([-1,0]);
-		}
-		setTimeout(this.reflexion(admis));
+	
+	setTimeout(this.reflexion(admis));
 	}
-
-    Robot.prototype.reflexion = function (tabMvt)
+    
+     Robot.prototype.reflexion = function (tabMvt)
     {
     	var min = 0;
        	var max = tabMvt.length;
@@ -167,9 +152,12 @@
 		this.action(act);
 		this.eveille=true;
 	}
-	
     
-
+  // -------------------------------------------------------
+  // Méthodes de l'objet Grille  
+ 
+  // -------------------------------------------------------
+  // Méthodes de l'objet
   // -------------------------------------------------------
   // scène globale
   var gr = new Grille(12,12,'mon_canvas');
