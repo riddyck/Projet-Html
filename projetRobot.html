@@ -22,6 +22,9 @@
 </body>
 <script type="text/javascript">
 
+ // -------------------------------------------------------
+  // Méthodes de l'objet Grille  
+ 	
 	function Grille(nbX, nbY, canva) {
 		this.nbX=nbX;
 		this.nbY=nbY;
@@ -29,19 +32,19 @@
 		this.tab= new Array(nbX);
 		
 		for (var i=0;i<nbX;i++) {
-			this.tab[i]= new Array(nbY);
-			for (var j=0;j<nbY;j++) 
+				this.tab[i]= new Array(nbY);
+				for (var j=0;j<nbY;j++) 
 				this.tab[i][j]=false;
-		}
+			}
 		
-        this.dX = 350/nbX;
-        this.dY = 350/nbY;
+        	this.dX = 350/nbX;
+       		this.dY = 350/nbY;
 		this.obj= new Array; 
 		this.nbC=nbX*nbY;
 		this.nbCur=0;
-        this.ctx='2d';
+        	this.ctx='2d';
 		
-	}
+		}
 	
 	Grille.prototype.dessinGrille = function() 
 	{
@@ -62,18 +65,17 @@
 	Grille.prototype.ajoutObjet = function(objet)
 	{
 		this.nbCur += 1;
-        var longueur = this.obj.push(objet);
-        tab[objet.posX][objet.posY]=true;
+        	this.obj.push(objet);
+        	tab[objet.posX][objet.posY]=true;
 	}
 	
-    Grille.prototype.dessin = function()
-    {
-    	this.dessinGrille();
+    	Grille.prototype.dessin = function()
+    	{
+    		this.dessinGrille();
+        	var c = document.getElementById(this.canvas);
+        	var ctx = c.getContext(this.ctx);
         
-        var c = document.getElementById(this.canvas);
-        var ctx = c.getContext(this.ctx);
-        
-        for (var k =0;k<this.nbCur;k++) {
+        	for (var k =0;k<this.nbCur;k++) {
         	ctx.moveTo(this.obj[k].posX,this.obj[k].posY);
         	dessin(this.ctx,this.dX,this.dY);
         }
@@ -87,9 +89,14 @@
         return(false);
     }
 	
-    Grille.prototype.dessin = function(objet,dx,dy)
+    Grille.prototype.majDessinObjet = function(objet,dx,dy)
     {
-        dessin(this.ctx,this.dx,this.dy);
+        ctx.arc((objet.posX-dx)*dX+dX/2, (objet.posY-dy)*dY+dY/2, 0.45*dX, 0, 2 * Math.PI);
+		ctx.fillStyle = 'white';
+        ctx.strokeStyle = 'white';
+        ctx.fill();
+        ctx.stroke();	
+        objet.dessin(this.ctx,this.dx,this.dy);
     }
     
     Grille.prototype.stopObjets = function()
@@ -98,6 +105,10 @@
         		this.obj[k].eveille=false;
             }
     }
+
+	
+  // -------------------------------------------------------
+  // Méthodes de l'objet
 	
      function Robot(x,y,vitesse,couleur) {
 		this.PosX=x;
@@ -108,6 +119,15 @@
 		this.eveille= false ;
 		
 	}
+	
+	Robot.prototype.dessin = function (ctx,dX,dY)
+   	{	
+    		ctx.arc(this.posX*dX+dX/2, this.posY*dY+dY/2, 0.45*dX, 0, 2 * Math.PI);
+		ctx.fillStyle = this.couleur;
+        	ctx.strokeStyle = this.couleur;
+        	ctx.fill();
+        	ctx.stroke();	
+    	}
 	
 	Robot.prototype.perception =function() {
 		var admis= new Array;
@@ -120,14 +140,18 @@
 		if (gr.mvtAdmis(this,-1,0))
 			admis.push([-1,0]);
 	
-	setTimeout(this.reflexion(admis));
+		setTimeout(this.reflexion(admis));
 	}
+
+    	Robot.prototype.reflexion = function (tabMvt)
+    	{
+    		var min = 0;
+        	var max = tabMvt.length;
+        	var act = tabMvt[getRandomInt(min, max)];
+        	setTimeout(function(){ this.action; }, this.temps);
+        
+    	}
     
-  // -------------------------------------------------------
-  // Méthodes de l'objet Grille  
- 
-  // -------------------------------------------------------
-  // Méthodes de l'objet
 
   // -------------------------------------------------------
   // scène globale
