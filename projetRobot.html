@@ -35,14 +35,14 @@
 				this.tab[i]= new Array(nbY);
 				for (var j=0;j<nbY;j++) {
 					this.tab[i][j]=false;
-				}
+			}
 		
-        	this.dX = 350/nbX;
-       		this.dY = 350/nbY;
-			this.obj= new Array; 
-			this.nbC=nbX*nbY;
-			this.nbCur=0;
-        	this.ctx='2d';
+       	this.dX = 350/nbX;
+       	this.dY = 350/nbY;
+		this.obj= new Array; 
+		this.nbC=nbX*nbY;
+		this.nbCur=0;
+       	this.ctx='2d';
 		
 		}
 	
@@ -154,6 +154,20 @@
        	setTimeout(function(){ this.action; }, this.temps);
         
     }
+	
+	Robot.prototype.action =function(act) {
+		var a,b;
+		[a,b]=act;
+		gr.majDessinObjet(this,a,b)
+	}
+		
+	Robot.prototype.reveille =function() {
+		var act= new Array;
+		act=this.perception();
+		this.action(act);
+		this.eveille=true;
+	}
+	
     
 
   // -------------------------------------------------------
