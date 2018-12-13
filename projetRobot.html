@@ -1,67 +1,171 @@
+
+Result Size: 592 x 833
+
 <!DOCTYPE html>
+
 <html>
+
 <head>
-	<title>TP1-4</title>
-	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-	<link rel="stylesheet" href="tools/normalize.css"/>
-	<style type="text/css">
+
+    <title>TP1-4</title>
+
+    <meta charset="utf-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+    <link rel="stylesheet" href="tools/normalize.css"/>
+
+    <style type="text/css">
+
      * { text-align: center; }
+
      .canva { width: 350px; height: 350px; border-width: 2px; border-style: solid; margin-left: auto; margin-right: auto;}
+
      #stop:hover { font-variant: small-caps; cursor: pointer; }
+
    </style>
+
    <script type="text/javascript" src="tools/tools.js"></script>
+
 </head>
+
 <body>
+
    <div class="canva">
-		<canvas id="mon_canvas" width="350" height="350"> 
-  			Texte alternatif pour les navigateurs ne supportant pas Canvas.
-		</canvas>
-	</div>
-  <div id="stop_clic">Stop</div>
+
+        <canvas id="mon_canvas" width="350" height="350"> 
+
+            Texte alternatif pour les navigateurs ne supportant pas Canvas.
+
+        </canvas>
+
+    </div>
+
+  <div id="stop">Stop</div>
+
 </body>
+
 <script type="text/javascript">
 
-	function Grille(nbX, nbY, canva) {
-		this.nbX=nbX;
-		this.nbY=nbY;
-		this.canvas=canva;
-		this.tab= new array(nbX);
-		
-		for (var i=0;i<nbX;i++) {
-			this.tab[i]= new array(nbY);
-			for (var j=0;j<nbY;j++) 
-				this.tab[i][j]=false;
-		}
-		
-		this.obj= new array; 
-		this.nbC=nbX*nbY;
-		
-		
-	}
+​
 
-	
-	
-	
-	
-  // -------------------------------------------------------
-  // Méthodes de l'objet Grille  
- 
-  // -------------------------------------------------------
-  // Méthodes de l'objet
+    function Grille(nbX, nbY, canva) {
 
-  // -------------------------------------------------------
-  // scène globale
-  var gr = new Grille(12,12,'mon_canvas');
-  var rbt1 = new Robot(4,4,0.1,'black');
-  var rbt2 = new Robot(11,11,0.03,'red');
-  var rbt3 = new Robot(5,10,0.05,'blue');
-  gr.ajoutObjet(rbt1);
-  gr.ajoutObjet(rbt2);
-  gr.ajoutObjet(rbt3);
-  gr.dessin();
-  //rbt1.reveille();
-  //rbt2.reveille();
-  //rbt3.reveille();
-</script>
-</html>
+        this.nbX=nbX;
+
+        this.nbY=nbY;
+
+        this.canvas=canva;
+
+        this.tab= new Array(nbX);
+
+        
+
+        for (var i=0;i<nbX;i++) {
+
+            this.tab[i]= new Array(nbY);
+
+            for (var j=0;j<nbY;j++) 
+
+                this.tab[i][j]=false;
+
+        }
+
+        
+
+        this.dX = 350/nbX;
+
+        this.dY = 350/nbY;
+
+        this.obj= new Array; 
+
+        this.nbC=nbX*nbY;
+
+        this.nbCur=0;
+
+        this.ctx='2d';
+
+        
+
+    }
+
+    
+
+    Grille.prototype.dessinGrille = function() 
+
+    {
+
+        var c = document.getElementById(this.canvas);
+
+        var ctx = c.getContext(this.ctx);
+
+        for (var k=1;k<this.nbX;k++) {
+
+            ctx.moveTo(0, k*this.dX);
+
+            ctx.lineTo(350, k*this.dX);
+
+        }
+
+        for (var k=1;k<this.nbY;k++) {
+
+            ctx.moveTo(k*this.dY,0);
+
+            ctx.lineTo(k*this.dY,350);
+
+        }
+
+        ctx.strokeStyle = "grey";
+
+        ctx.stroke();
+
+    }
+
+​
+
+    Grille.prototype.ajoutObjet = function(objet)
+
+    {
+
+        this.nbCur += 1;
+
+        var longueur = this.obj.push(objet);
+
+        tab[objet.posX][objet.posY]=true;
+
+    }
+
+    
+
+    Grille.prototype.dessin = function()
+
+    {
+
+        this.dessinGrille();
+
+        
+
+        var c = document.getElementById(this.canvas);
+
+        var ctx = c.getContext(this.ctx);
+
+        
+
+        for (var k =0;k<this.nbCur;k++) {
+
+            ctx.moveTo(this.obj[k].posX,this.obj[k].posY);
+
+            dessin(this.ctx,this.dX,this.dY);
+
+        }
+
+    }
+
+    
+
+    Grille.prototype.mvtAdmis = function(objet,dx,dy)
+
+    {
+
+        if ((objet.posX+dx >= 0) && (objet.posX+dx < this.nbX) && (objet.posY+dy >= 0) && (objet.posY+dy < this.nbY)){
+
